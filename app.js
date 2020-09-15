@@ -2,6 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const Blog = require ('./models/blog');
+const { render } = require('ejs');
 //express
 const app = express();
 //connect to DB
@@ -16,33 +17,9 @@ app.listen(4000)
 app.set('view engine', 'ejs');
 //set up middleware & static
 app.use(express.static('public'));
+app.use(express.urlencoded({extended: true}))
 app.use(morgan('dev'));
 
-//mongoose and mongo route
-app.get('/add-blog', (req,res)=>{
-    const blog = new Blog({
-        title: 'New Blog 2',
-        snippet:'New Blog Post',
-        body: 'hope you enjoy my blog post'
-    });
-    blog.save()
-    .then((result)=>{ res.send(result)})
-    .catch((err)=> { console.log(err)});
-});
-
-app.get('/all-blogs', (req, res)=>{
-    Blog.find()
-    .then((result)=>{
-        res.send(result)
-    })
-    .catch((err)=>{console.log(err)});
-});
-
-app.get('/single-blog', (req, res)=>{
-    Blog.findById('5f4f74c028403a03b89b22c4')
-    .then((result)=>{res.send(result)})
-    .catch((err)=>{console.log(err)});
-});
 
 //routes
 app.get('/',(req, res)=>{
@@ -51,10 +28,30 @@ app.get('/',(req, res)=>{
         res.render('index', {title: 'Home', blogs:result})                 
     })
     .catch((err)=>{
-        console.log(er)
+        console.log(err)
     })
 
 });
+
+app.post('/blogs', (req, res)=>{
+    const blog = new Blog (req.body);
+    blog.save()
+    .then((result)=>{
+        res.redirect('/')
+    })
+    .catch((err)=>{console.log(err)})
+});
+
+app.get(('/blogs/:id'), (req, res)=>{
+    const id = req.params.id;
+    Blog.findById(id)
+    .then(result=>{
+        res.render('details', { blog: result, title: 'Blog Details'})
+    })
+    .catch(err=>{
+        console.log(err)
+    })
+})
 app.get('/about',(req, res)=>{
     console.log('Server is running')
     res.render('about', {title: 'About'})
