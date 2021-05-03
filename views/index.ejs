@@ -5,15 +5,40 @@
 <%- include('./partials/nav.ejs')%>
     <div class="blog content">  
         <h2>All Blogs</h2>
+        <div class="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+            <div class="mb-10 border-t border-b divide-y">
         <%if (blogs.length >0){%>
-            <% blogs.forEach(blog => {%>        
-                <h3 class="title"><%= blog.title%></h3>
+            <% blogs.forEach(blog => {%>
+                <div class="grid py-8 sm:grid-cols-4">
+                    <div class="mb-4 sm:mb-0">
+                      <div class="space-y-1 text-xs font-semibold tracking-wide uppercase">
+                        <a href="/" class="transition-colors duration-200 text-deep-purple-accent-400 hover:text-deep-purple-800" aria-label="Category">Detective</a>
+                        <p class="text-gray-600"><%= blog.createdAt%></p>
+                      </div>
+                    </div>
+                    <div class="sm:col-span-3 lg:col-span-2">
+                      <div class="mb-3">
+                        <a href="/" aria-label="Article" class="inline-block text-black transition-colors duration-200 hover:text-deep-purple-accent-700">
+                        <p class="text-3xl font-extrabold leading-none sm:text-4xl xl:text-4xl">
+                            <%= blog.title%>    
+                        </p>
+                        </a>
+                      </div>
+                      <p class="text-gray-700">
+                        <%= blog.snippet%>
+                      </p>
+                      <a href="/blogs/<%= blog.id %> ">Read</a>
+                    </div>
+                  </div>        
+                <!-- <h3 class="title"><%= blog.title%></h3>
                 <p class="snippet"><%= blog.snippet%></p>
-                <a href="/blogs/<%= blog.id %> ">Read</a>
+                <a href="/blogs/<%= blog.id %> ">Read</a> -->
             <% }) %>
         <% } else{%>
             <p>No Blog post to display</p>
         <%}%>
+    </div>
+    </div>
     </div>
     <%- include('./partials/footer.ejs')%>
 </body>
